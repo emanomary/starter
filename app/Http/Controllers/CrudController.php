@@ -59,7 +59,7 @@ class CrudController extends Controller
     protected function getMessages()
     {
       return $messages = [
-            'name.required' => 'حقل الاسم مطلوب',
+            'name.required' => __('message.offer name'),
             'price.required' => 'حقل الثمن مطلوب',
             'details.required' => 'حقل التفاصيل مطلوب',
             'name.max' => 'يجب ألا يزيد طول الاسم عن 100 حرف',
