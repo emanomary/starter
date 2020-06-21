@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -41,6 +42,19 @@ class LoginController extends Controller
     //to login in mobile no.
     public function username()
     {
-        return 'mobile';
+        $value = request()->input('identify');
+
+        //to know if value email or mobile
+        $field = filter_var($value,FILTER_VALIDATE_EMAIL) ? 'email' : 'mobile';
+
+        /*$field = '';
+        if(filter_var($value,FILTER_VALIDATE_EMAIL))
+            $field = 'email';
+        else
+            $field = 'mobile';*/
+
+        request()->merge([$field => $value]);
+
+        return $field;
     }
 }
