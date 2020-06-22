@@ -89,9 +89,22 @@ Route::group(
     {
         Route::group(['prefix'=>'offers'],function (){
 
-        Route::get('create','CrudController@create')->name('offers.create');
-        Route::post('store','CrudController@store')->name('offers.store');
+            Route::get('index','CrudController@index')->name('offers.index');
+            Route::get('create','CrudController@create')->name('offers.create');
+            Route::post('store','CrudController@store')->name('offers.store');
+            Route::get('edit/{id}','CrudController@edit')->name('offers.edit');
+            Route::post('update/{id}','CrudController@update')->name('offers.update');
+            Route::get('delete/{id}','CrudController@delete')->name('offers.delete');
+
     });
+        Route::get('video','CrudController@getVideo')->middleware('auth')->name('video');
+
+});
 
 
+############# Ajax ##################
+Route::group(['prefix'=> 'ajax-offers','namespace' => 'Offer'], function (){
+
+    Route::get('create','OfferController@create')->name('ajaxoffers.create');
+    Route::post('store','OfferController@store')->name('ajaxoffers.store');
 });

@@ -10,7 +10,7 @@ class Offer extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['name', 'price', 'details'];
+    protected $fillable = ['name_ar', 'name_en', 'price', 'details_ar', 'details_en','photo'];
 
     protected $hidden = ['created_at', 'updated_at'];
 

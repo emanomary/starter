@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\VideoViewer;
+use App\Http\Requests\OfferRequest;
 use App\Models\Offer;
+use App\Models\Video;
+use App\Traits\OfferTrait;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use LaravelLocalization;
 
 class CrudController extends Controller
 {
+    use OfferTrait;
     /**
      * Create a new controller instance.
      *
@@ -17,10 +24,24 @@ class CrudController extends Controller
     {
     }
 
-    public function getOffer()
+    /*public function getOffer()
     {
         return Offer::get();
 
+    }*/
+    public function getOffer()
+    {
+        return Offer::get();
+    }
+    public function index()
+    {
+        $offers = Offer::select('id',
+            'price',
+            'name_' . LaravelLocalization::getCurrentLocale() . ' as name',
+            'details_' . LaravelLocalization::getCurrentLocale() . ' as details'
+        )->get(); // return collection
+
+        return view('offers.index',compact('offers'));
     }
 
     public function create()
@@ -28,26 +49,31 @@ class CrudController extends Controller
         return view('offers.create');
     }
 
-    public function store(Request $request)
+    public function store(OfferRequest $request)
     {
         //validate data before insert to database
-        $rules = $this->getRules();
+        /*$rules = $this->getRules();
         $messages = $this->getMessages();
         $validator = Validator::make($request->all(),$rules,$messages);
         if($validator->fails())
         {
             //return $validator->errors();
             return redirect()->back()->withErrors($validator)->withInput($request->all());
-        }
+        }*/
 
+        $file_name = $this->saveImage($request->photo, 'images/offers');
         //insert to database
         Offer::create([
-            'name' => $request->input('name'),
+            'name_ar' => $request->input('name_ar'),
+            'name_en' => $request->input('name_en'),
             'price' => $request->input('price'),
-            'details' => $request->input('details')
+            'details_ar' => $request->input('details_ar'),
+            'details_en' => $request->input('details_en'),
+            'photo' => $file_name
         ]);
 
-        return redirect()->back()->with(['success'=>'your offer saved successfully']);
+        return redirect()->back()->with(['success'=>__('message.success')]);
+
         /*Offer::create([
             'name' => 'eman',
             'price' => '200',
@@ -56,7 +82,7 @@ class CrudController extends Controller
         //return $request;
     }
 
-    protected function getMessages()
+    /*protected function getMessages()
     {
       return $messages = [
             'name.required' => __('message.offer name'),
@@ -75,5 +101,66 @@ class CrudController extends Controller
             'price'=>'required|numeric',
             'details'=>'required'
         ];
+    }*/
+
+    public function edit($id)
+    {
+        //$offer = Offer::findOrFail($id);
+        //$offer = Offer::find($id);//search in given table id only
+        $offer = Offer::select('id','name_ar','name_en','price','details_ar','details_en')->find($id); // return collection
+        if(!$offer)
+        {
+            return redirect()->back();
+        }
+
+        return view('offers.edit',compact('offer'));
+
+    }
+
+    public function update(OfferRequest $request,$id)
+    {
+        //validate
+        //select
+        $offer = Offer::select('id','name_ar','name_en','price','details_ar','details_en')->find($id);
+        if(!$offer)
+        {
+            return redirect()->back();
+        }
+        //update
+        $offer->update($request->all());
+
+        /*$offer->update([
+            'name_ar' => $request->input('name_ar'),
+            'name_en' => $request->input('name_en'),
+            'price' => $request->input('price'),
+            'details_ar' => $request->input('details_ar'),
+            'details_en' => $request->input('details_en'),
+        ]);*/
+
+        return redirect()->back()->with(['success'=>__('message.success')]);
+    }
+
+    public function getVideo()
+    {
+        $video = Video::first();
+        event(new VideoViewer($video));
+        return view('video')->with('video',$video);
+    }
+
+    public function delete($id)
+    {
+        //check if offer id exists
+
+        $offer = Offer::find($id);   // Offer::where('id','$offer_id') -> first();
+
+        if (!$offer)
+            return redirect()->back()->with(['error' => __('message.offer not exist')]);
+
+        $offer->delete();
+
+        return redirect()
+            ->route('offers.index')
+            ->with(['success' => __('message.offer deleted successfully')]);
+
     }
 }
