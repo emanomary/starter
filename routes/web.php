@@ -102,9 +102,21 @@ Route::group(
 });
 
 
-############# Ajax ##################
+############################## Ajax #########################################
 Route::group(['prefix'=> 'ajax-offers','namespace' => 'Offer'], function (){
 
     Route::get('create','OfferController@create')->name('ajaxoffers.create');
     Route::post('store','OfferController@store')->name('ajaxoffers.store');
+    Route::get('index','OfferController@index')->name('ajaxoffers.index');
+    Route::post('delete','OfferController@delete')->name('ajaxoffers.delete');
+    Route::get('edit/{id}','OfferController@edit')->name('ajaxoffers.edit');
+    Route::post('update','OfferController@Update')->name('ajaxoffers.update');
 });
+############################## End Ajax ####################################
+
+############################## Authentication && Guards ####################
+
+
+######################## End Authentication && Guards ######################
+
+

@@ -17,12 +17,6 @@
 
                 </div>
 
-                @if(Session::has('success'))
-                    <div class="alert alert-success" role="alert">
-                        {{ Session::get('success') }}
-                    </div>
-                @endif
-
                 <br>
                 <form method="" id="offerForm" action="" enctype="multipart/form-data">
                     @csrf
@@ -31,7 +25,6 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1">أختر صورة العرض</label>
                         <input type="file" id="file" class="form-control" name="photo">
-
                         <small id="photo_error" class="form-text text-danger"></small>
                     </div>
 
@@ -85,6 +78,14 @@
     <script>
         $(document).on('click','#save_offer',function (e) {
             e.preventDefault();
+            //delete all error messages
+            $('#photo_error').text('');
+            $('#name_ar_error').text('');
+            $('#name_en_error').text('');
+            $('#price_error').text('');
+            $('#details_ar_error').text('');
+            $('#details_en_error').text('');
+
             //take all data of form and save it in formData variable
             var formData = new FormData($('#offerForm')[0]);
 
@@ -102,9 +103,11 @@
                         $('#success_msg').show();
                 },
                 error:function (reject) {
-                    if(reject.status == false)
-                        //alert(reject.error_msg)
-                        $('#error_msg').show();
+                    //show error validation under fields
+                    var response = $.parseJSON(reject.responseText);
+                    $.each(response.errors, function (key, val) {
+                        $("#" + key + "_error").text(val[0]);
+                    });
                 }
             });
         });
