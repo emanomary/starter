@@ -36,7 +36,6 @@ class IncreaseCounter
 
     function updateViewer($video)
     {
-
         $video->viewers = $video->viewers + 1;
         $video->save();
         session()->put('videoIsVisited', $video->id);

@@ -15,9 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test1', function () {
-    return 'welcome';
-})->name('a');
+Route::get('dashboard', function () {
+    return 'You are not allowed';
+})->name('dashboard');
 
 Route::get('/test2/{id}', function ($id) {
     return $id;
@@ -115,8 +115,58 @@ Route::group(['prefix'=> 'ajax-offers','namespace' => 'Offer'], function (){
 ############################## End Ajax ####################################
 
 ############################## Authentication && Guards ####################
+Route::group(['namespace' => 'Auth','prefix'=>'customauth','middleware'=>'CheckAge'],function ()
+{
+    Route::get('index','CustomAuthController@adult')->name('customauth.index');
+});
+Route::get('site','Auth\CustomAuthController@site')->middleware('auth:web')->name('site');
+Route::get('admin','Auth\CustomAuthController@admin')->middleware('auth:admin')->name('admin');
 
+Route::get('admin/login', 'Auth\CustomAuthController@adminLogin')-> name('admin.login');
+Route::post('admin/login', 'Auth\CustomAuthController@checkAdminLogin')-> name('save.admin.login');
 
 ######################## End Authentication && Guards ######################
 
 
+/************************** Begin Relations route *********************/
+
+######################## Begin one to one Relations route #########################
+Route::group(['namespace'=>'Relation'],function ()
+{
+    Route::get('has-one','RelationsController@hasOneRelation');
+    Route::get('has-one-reverse','RelationsController@hasOneRelationReverse');
+    Route::get('get-user-has-phone','RelationsController@getUserHasPhone');
+    Route::get('get-user-not-has-phone','RelationsController@getUserNotHasPhone');
+    Route::get('get-user-has-phone-with-condition','RelationsController@getUserHasPhoneWithCondition');
+});
+######################## End One to one Relations route ######################
+
+######################## Begin One to many relations #####################
+Route::group(['namespace'=>'Relation'],function ()
+{
+    Route::get('hospital-has-many','RelationsController@getHospitals');
+    Route::get('hospital-has-many-doctors','RelationsController@getHospitalDoctors');
+
+    Route::get('hospitals','RelationsController@hospitals')->name('hospitals');
+    Route::get('doctors/{hospital_id}','RelationsController@showDoctors')->name('doctors.show');
+
+    Route::get('hospital-has-doctor','RelationsController@HospitalHasDoctors');
+    Route::get('hospital-has-doctor-male','RelationsController@HospitalHasDoctorMale');
+    Route::get('hospital-not-has-doctor-male','RelationsController@HospitalNotHasDoctorMale');
+
+    Route::get('hospitals/{hospital_id}','RelationsController@deleteHospital')->name('hospital.delete');
+});
+######################## End One to many Relations route #################
+
+######################## Begin Many to many relations #####################
+Route::group(['namespace'=>'Relation'],function ()
+{
+    Route::get('doctor/service','RelationsController@getDoctorService');
+    Route::get('service/doctor','RelationsController@getServiceDoctor');
+
+    Route::get('doctors/services/{doctor_id}','RelationsController@getDoctorServicesById')->name('doctors.services');
+    Route::post('saveServices-to-doctor','RelationsController@saveServicesToDoctors')-> name('save.doctors.services');
+
+});
+######################## End Many to many Relations route #################
+/********************* End Relations route ***************************/
