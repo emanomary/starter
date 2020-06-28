@@ -232,4 +232,20 @@ class RelationsController extends Controller
         return $country;
     }
     /********************* End has many through Functions ***********************/
+
+    /******************** Accessors ************************************/
+    public function getDoctors()
+    {
+        return $doctors = Doctor::select('id','name', 'sex')->get();
+        /*if(isset($doctors) && $doctors->count()>0)
+        {
+            foreach($doctors as $doctor){
+                $doctor->sex = $doctor->sex == 0 ? 'male':'female';
+            }
+
+        }
+        return $doctors;*/
+    }
+    /******************** End Accessors ************************************/
+
 }

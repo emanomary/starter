@@ -181,3 +181,12 @@ Route::group(['namespace'=>'Relation'],function ()
 });
 ######################## End has one through Relations route #################
 /********************* End Relations route ***************************/
+
+
+/******************** Begin Accessors && Mutators ********************************/
+
+Route::get('accessors','Relation\RelationsController@getDoctors');
+
+/******************** End Accessors && Mutators ********************************/
+
+

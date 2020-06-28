@@ -6,6 +6,7 @@ use App\Events\VideoViewer;
 use App\Http\Requests\OfferRequest;
 use App\Models\Offer;
 use App\Models\Video;
+use App\Scopes\OfferScope;
 use App\Traits\OfferTrait;
 use App\User;
 use Illuminate\Http\Request;
@@ -54,8 +55,17 @@ class CrudController extends Controller
     public function getAllInactiveOffers()
     {
         //where
-        //$inactiveoffers = Offer::where('status',0)->get();
-        $inactiveoffers = Offer::inactive()->get();
+        $inactiveoffers = Offer::where('status',0)->get();
+
+        /**************local scope************************/
+        //$inactiveoffers = Offer::inactive()->get();
+
+        /********************* global scope ****************/
+       // $inactiveoffers = Offer::get();
+
+        /*******************how to remove global scope *****************/
+        //$inactiveoffers = Offer::withoutGlobalScope(OfferScope::class)->get();
+
         return $inactiveoffers;
         //return view('offers.index',compact('offers'));
     }

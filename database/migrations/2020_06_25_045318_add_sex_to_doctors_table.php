@@ -14,7 +14,7 @@ class AddSexToDoctorsTable extends Migration
     public function up()
     {
         Schema::table('doctors', function (Blueprint $table) {
-            $table->string('sex',10);
+            $table->smallInteger('sex');
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\OfferScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Offer extends Model
@@ -22,5 +23,20 @@ class Offer extends Model
         return $query->where('status',1)->whereNull('photo');
     }
     ############### End local scope ###############################
+
+    //register globa scope
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new OfferScope);
+    }
+
+    /******************** Mutators **************************/
+    public function setNameEnAttribute($value)
+    {
+        return $this->attributes['name_en'] = strtoupper($value);
+    }
+
+    /******************** End Mutators ************************************/
 
 }
