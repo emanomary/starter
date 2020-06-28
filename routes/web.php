@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+define('PAGINATION_COUNT',5);
 Route::get('/', function () {
     return view('welcome');
 });
@@ -80,7 +80,7 @@ Route::get('redirect/{service}','SocialController@redirect');
 Route::get('/callback/{service}','SocialController@callback');
 
 Route::get('/fillable','CrudController@getOffer');
-
+#############################################################################
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
@@ -90,6 +90,7 @@ Route::group(
         Route::group(['prefix'=>'offers'],function (){
 
             Route::get('index','CrudController@index')->name('offers.index');
+            Route::get('get-inactive-offer','CrudController@getAllInactiveOffers')->name('offers.inactive');
             Route::get('create','CrudController@create')->name('offers.create');
             Route::post('store','CrudController@store')->name('offers.store');
             Route::get('edit/{id}','CrudController@edit')->name('offers.edit');
@@ -169,4 +170,14 @@ Route::group(['namespace'=>'Relation'],function ()
 
 });
 ######################## End Many to many Relations route #################
+
+######################## Begin has one through relations #####################
+Route::group(['namespace'=>'Relation'],function ()
+{
+    Route::get('has-one-through','RelationsController@getPatientDoctor');
+    Route::get('has-many-through','RelationsController@getCountrytDoctor');
+    Route::get('country/hospital','RelationsController@getCountrytHospital');
+
+});
+######################## End has one through Relations route #################
 /********************* End Relations route ***************************/

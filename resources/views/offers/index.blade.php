@@ -90,7 +90,10 @@
         </form>
     </div>
 </nav>
-
+    <div class="container">
+        <br>
+        <br>
+        <br>
     @if(Session::has('success'))
 
         <div class="alert alert-success">
@@ -142,6 +145,10 @@
 
 
     </table>
-
+        <div class="d-flex justify-content-center">
+            {{--{{$offers->links()}}--}}
+            {!! $offers->links() !!}
+        </div>
+    </div>
 </body>
 </html>

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Relation;
 
+use App\Models\Country;
 use App\Models\Doctor;
 use App\Models\Hospital;
+use App\Models\Patient;
 use App\Models\Phone;
 use App\Models\Service;
 use App\User;
@@ -205,4 +207,29 @@ class RelationsController extends Controller
     }
 
     /********************* End Many to many Functions ***********************/
+
+    /********************* Begin has one through Functions ***********************/
+    public function getPatientDoctor()
+    {
+        $patient = Patient::find(2);
+        $doctor = $patient->doctor;
+        return $doctor;
+    }
+    /********************* End has one through Functions ***********************/
+
+
+    /********************* Begin has many through Functions ***********************/
+    public function getCountrytDoctor()
+    {
+        $country = Country::with('doctor')->find(2);
+        //$doctor = $country->doctor;
+        return $country;
+    }
+
+    public function getCountrytHospital()
+    {
+        $country = Country::with('hospital')->find(2);
+        return $country;
+    }
+    /********************* End has many through Functions ***********************/
 }

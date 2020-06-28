@@ -10,7 +10,7 @@ class Doctor extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['name', 'title','hospital_id','sex'];
+    protected $fillable = ['name', 'title','hospital_id','sex','medical_id'];
 
     protected $hidden = ['created_at', 'updated_at','pivot'];
 

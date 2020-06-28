@@ -10,9 +10,17 @@ class Offer extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['name_ar', 'name_en', 'price', 'details_ar', 'details_en','photo'];
+    protected $fillable = ['name_ar', 'name_en', 'price', 'details_ar', 'details_en','photo','status'];
 
     protected $hidden = ['created_at', 'updated_at'];
 
     //public $timestamps = false;
+
+    ############### local scope ####################################
+    public function scopeInactive($query)
+    {
+        return $query->where('status',1)->whereNull('photo');
+    }
+    ############### End local scope ###############################
+
 }

@@ -33,15 +33,31 @@ class CrudController extends Controller
     {
         return Offer::get();
     }
+
     public function index()
     {
+       /* $offers = Offer::select('id',
+            'price',
+            'name_' . LaravelLocalization::getCurrentLocale() . ' as name',
+            'details_' . LaravelLocalization::getCurrentLocale() . ' as details'
+        )->get(); // return collection of all offers*/
+
+        //paginate result
         $offers = Offer::select('id',
             'price',
             'name_' . LaravelLocalization::getCurrentLocale() . ' as name',
             'details_' . LaravelLocalization::getCurrentLocale() . ' as details'
-        )->get(); // return collection
-
+        )->paginate(PAGINATION_COUNT); // return collection of all offers
         return view('offers.index',compact('offers'));
+    }
+
+    public function getAllInactiveOffers()
+    {
+        //where
+        //$inactiveoffers = Offer::where('status',0)->get();
+        $inactiveoffers = Offer::inactive()->get();
+        return $inactiveoffers;
+        //return view('offers.index',compact('offers'));
     }
 
     public function create()
